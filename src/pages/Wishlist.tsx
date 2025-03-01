@@ -1,42 +1,40 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Heart, Search, ChevronRight } from 'lucide-react';
+import { Heart, ChevronRight, ShoppingCart, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { getWishlist, removeFromWishlist, clearWishlist, Book } from '@/services/wishlistService';
+import { toast } from 'sonner';
 
 const Wishlist = () => {
-  // Sample wishlist data
-  const wishlistItems = [
-    {
-      id: 1,
-      title: "قلب إذا تاخر إذا انصرف",
-      author: "جمال صبري - مكتبة جرير",
-      language: "عربي",
-      coverImage: "https://placehold.co/100x140/edf6f9/118ab2?text=Arabic+Book"
-    },
-    {
-      id: 2,
-      title: "PHP & MySQL",
-      author: "John Smith - TechPress",
-      language: "English",
-      coverImage: "/lovable-uploads/cf1ca58a-eb8a-4f22-994a-63f0a1a2cd90.png"
-    },
-    {
-      id: 3,
-      title: "قصص للأطفال",
-      author: "سارة أحمد - دار النشر العربية",
-      language: "عربي",
-      coverImage: "https://placehold.co/100x140/edf6f9/118ab2?text=Children+Book"
-    },
-    {
-      id: 4,
-      title: "Learning Time",
-      author: "Emily Johnson - Education Press",
-      language: "English",
-      coverImage: "https://placehold.co/100x140/edf6f9/118ab2?text=Learning+Time"
+  const [wishlistItems, setWishlistItems] = useState<Book[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Load wishlist items from localStorage
+    const items = getWishlist();
+    setWishlistItems(items);
+    setIsLoading(false);
+  }, []);
+
+  const handleRemoveItem = (bookId: number) => {
+    if (removeFromWishlist(bookId)) {
+      // Update the state to remove the book
+      setWishlistItems(prevItems => prevItems.filter(item => item.id !== bookId));
     }
-  ];
+  };
+
+  const handleClearWishlist = () => {
+    clearWishlist();
+    setWishlistItems([]);
+  };
+
+  const handleAddToCart = (book: Book) => {
+    // This would be implemented with a cart service
+    toast.success(`${book.title} added to cart!`);
+  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -46,7 +44,7 @@ const Wishlist = () => {
         {/* Breadcrumb */}
         <div className="container px-4 py-4">
           <div className="mb-4 flex items-center gap-1 text-xs text-muted-foreground">
-            <span>Home Library</span>
+            <Link to="/" className="hover:text-book-primary">Home Library</Link>
             <ChevronRight size={12} />
             <span className="text-book-primary">My Wishlist</span>
           </div>
@@ -67,69 +65,95 @@ const Wishlist = () => {
             <h2 className="text-xl font-medium text-gray-800">My Wishlist</h2>
           </div>
 
-          {/* Recently Added Section */}
+          {/* Wishlist Content */}
           <div className="mt-8 mb-12">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium text-gray-800">Recently added</h3>
-              <span className="text-sm text-muted-foreground">4 items</span>
+              <h3 className="text-lg font-medium text-gray-800">
+                {isLoading ? 'Loading...' : `Books in Wishlist (${wishlistItems.length})`}
+              </h3>
+              
+              {wishlistItems.length > 0 && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-red-500 border-red-500 hover:bg-red-50"
+                  onClick={handleClearWishlist}
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Clear All
+                </Button>
+              )}
             </div>
             
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-              {wishlistItems.map((item) => (
-                <div key={item.id} className="wishlist-item border-b border-gray-100 p-4 flex items-center gap-4">
-                  <img 
-                    src={item.coverImage} 
-                    alt={item.title} 
-                    className="h-24 w-auto object-cover rounded shadow-sm"
-                  />
-                  <div className="flex-1">
-                    <h4 className="font-medium text-gray-800">{item.title}</h4>
-                    <p className="text-sm text-gray-500">{item.author}</p>
-                    <p className="text-xs text-gray-400">{item.language}</p>
-                  </div>
-                  <button className="wishlist-remove-btn">
-                    Remove
-                  </button>
+            {!isLoading && wishlistItems.length === 0 ? (
+              <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                <div className="mb-4">
+                  <Heart className="h-16 w-16 mx-auto text-gray-300" />
                 </div>
-              ))}
-            </div>
+                <h3 className="text-xl font-medium text-gray-800 mb-2">Your wishlist is empty</h3>
+                <p className="text-gray-500 mb-6">Browse our collection and add books to your wishlist.</p>
+                <Link to="/catalogue">
+                  <Button className="bg-book-primary hover:bg-book-secondary">
+                    Browse Books
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                {isLoading ? (
+                  <div className="p-8 text-center">
+                    <p>Loading your wishlist...</p>
+                  </div>
+                ) : (
+                  wishlistItems.map((item) => (
+                    <div key={item.id} className="wishlist-item border-b border-gray-100 p-4 flex items-center gap-4">
+                      <Link to={`/book/${item.id}`} className="block h-24 w-auto">
+                        <img 
+                          src={item.coverImage} 
+                          alt={item.title} 
+                          className="h-24 w-auto object-cover rounded shadow-sm"
+                          onError={(e) => {
+                            e.currentTarget.src = `https://placehold.co/100x140/edf6f9/118ab2?text=${encodeURIComponent(item.title)}`;
+                          }}
+                        />
+                      </Link>
+                      <div className="flex-1">
+                        <Link to={`/book/${item.id}`} className="block">
+                          <h4 className="font-medium text-gray-800 hover:text-book-primary">{item.title}</h4>
+                        </Link>
+                        <p className="text-sm text-gray-500">{item.author}</p>
+                        <p className="text-xs text-gray-400">{item.language}</p>
+                        {item.price && (
+                          <p className="text-sm font-medium text-book-secondary mt-1">${item.price.toFixed(2)}</p>
+                        )}
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <Button 
+                          size="sm"
+                          className="bg-book-primary hover:bg-book-secondary"
+                          onClick={() => handleAddToCart(item)}
+                        >
+                          <ShoppingCart className="h-4 w-4 mr-1" />
+                          Add to Cart
+                        </Button>
+                        <Button 
+                          size="sm"
+                          variant="outline"
+                          className="text-red-500 border-red-500 hover:bg-red-50"
+                          onClick={() => handleRemoveItem(item.id)}
+                        >
+                          <Trash2 className="h-4 w-4 mr-1" />
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </div>
         </div>
       </main>
-      
-      <div className="bg-gray-900 text-white py-6">
-        <div className="container px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="quick-links">
-              <h3 className="text-sm font-medium mb-3">QUICK LINKS</h3>
-              <ul className="space-y-2">
-                <li><Link to="/" className="footer-link">Homepage</Link></li>
-                <li><Link to="/categories" className="footer-link">Categories</Link></li>
-                <li><Link to="/new-releases" className="footer-link">New Releases</Link></li>
-                <li><Link to="/authors" className="footer-link">Authors</Link></li>
-                <li><Link to="/about-us" className="footer-link">About Us</Link></li>
-              </ul>
-            </div>
-            
-            <div className="library">
-              <h3 className="text-sm font-medium mb-3">LIBRARY</h3>
-              <p className="text-xs text-white/70 mb-4">
-                Our online library offers the latest books in various formats to enhance your reading experience.
-              </p>
-            </div>
-            
-            <div className="social">
-              {/* Social links would go here */}
-            </div>
-          </div>
-          
-          <div className="mt-8 pt-4 border-t border-white/10 text-center">
-            <p className="text-xs text-white/50">
-              © 2023 Online Library. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </div>
       
       <Footer />
     </div>
