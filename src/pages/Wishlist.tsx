@@ -87,48 +87,49 @@ const Wishlist = () => {
                     <p className="text-sm text-gray-500">{item.author}</p>
                     <p className="text-xs text-gray-400">{item.language}</p>
                   </div>
-                  <button className="px-3 py-1 border border-book-primary text-book-primary rounded-md text-sm hover:bg-book-primary hover:text-white transition-colors">
+                  <button className="wishlist-remove-btn">
                     Remove
                   </button>
                 </div>
               ))}
             </div>
           </div>
-        </main>
-        
-        <div className="bg-gray-900 text-white py-6">
-          <div className="container px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="quick-links">
-                <h3 className="text-sm font-medium mb-3">QUICK LINKS</h3>
-                <ul className="space-y-2">
-                  <li><Link to="/" className="footer-link">Homepage</Link></li>
-                  <li><Link to="/categories" className="footer-link">Categories</Link></li>
-                  <li><Link to="/new-releases" className="footer-link">New Releases</Link></li>
-                  <li><Link to="/authors" className="footer-link">Authors</Link></li>
-                  <li><Link to="/about-us" className="footer-link">About Us</Link></li>
-                </ul>
-              </div>
-              
-              <div className="library">
-                <h3 className="text-sm font-medium mb-3">LIBRARY</h3>
-                <p className="text-xs text-white/70 mb-4">
-                  Our online library offers the latest books in various formats to enhance your reading experience.
-                </p>
-              </div>
-              
-              <div className="social">
-                {/* Social links would go here */}
-              </div>
+        </div>
+      </main>
+      
+      <div className="bg-gray-900 text-white py-6">
+        <div className="container px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="quick-links">
+              <h3 className="text-sm font-medium mb-3">QUICK LINKS</h3>
+              <ul className="space-y-2">
+                <li><Link to="/" className="footer-link">Homepage</Link></li>
+                <li><Link to="/categories" className="footer-link">Categories</Link></li>
+                <li><Link to="/new-releases" className="footer-link">New Releases</Link></li>
+                <li><Link to="/authors" className="footer-link">Authors</Link></li>
+                <li><Link to="/about-us" className="footer-link">About Us</Link></li>
+              </ul>
             </div>
             
-            <div className="mt-8 pt-4 border-t border-white/10 text-center">
-              <p className="text-xs text-white/50">
-                © 2023 Online Library. All rights reserved.
+            <div className="library">
+              <h3 className="text-sm font-medium mb-3">LIBRARY</h3>
+              <p className="text-xs text-white/70 mb-4">
+                Our online library offers the latest books in various formats to enhance your reading experience.
               </p>
             </div>
+            
+            <div className="social">
+              {/* Social links would go here */}
+            </div>
+          </div>
+          
+          <div className="mt-8 pt-4 border-t border-white/10 text-center">
+            <p className="text-xs text-white/50">
+              © 2023 Online Library. All rights reserved.
+            </p>
           </div>
         </div>
+      </div>
       
       <Footer />
     </div>
