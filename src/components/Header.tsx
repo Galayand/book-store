@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Search, User, Menu, X } from 'lucide-react';
+import { Search, User, Menu, X, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 
@@ -55,6 +55,10 @@ const Header = () => {
           <Link to="/categories" className="nav-link">Categories</Link>
           <Link to="/new-releases" className="nav-link">New Releases</Link>
           <Link to="/about-us" className="nav-link">About Us</Link>
+          <Link to="/wishlist" className="nav-link flex items-center gap-1">
+            <Heart size={16} />
+            <span>Wishlist</span>
+          </Link>
           <div className="flex items-center gap-2">
             <Link to="/login" className="text-sm text-muted-foreground hover:text-book-primary">
               Login
@@ -100,6 +104,10 @@ const Header = () => {
           <Link to="/categories" className="w-full rounded-md p-2 hover:bg-muted">Categories</Link>
           <Link to="/new-releases" className="w-full rounded-md p-2 hover:bg-muted">New Releases</Link>
           <Link to="/about-us" className="w-full rounded-md p-2 hover:bg-muted">About Us</Link>
+          <Link to="/wishlist" className="w-full rounded-md p-2 hover:bg-muted flex items-center gap-2">
+            <Heart size={16} />
+            <span>Wishlist</span>
+          </Link>
           <div className="mt-2 flex items-center justify-between border-t border-border pt-2">
             <Link to="/login" className="text-sm text-book-primary">Login</Link>
             <Link to="/register" className="text-sm text-book-primary">Register</Link>

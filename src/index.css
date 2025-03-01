@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -93,5 +92,18 @@
   
   .footer-link {
     @apply text-xs text-white/70 hover:text-white/90 transition-colors;
+  }
+
+  /* Wishlist specific styles */
+  .wishlist-icon-container {
+    @apply flex justify-center;
+  }
+  
+  .wishlist-item {
+    @apply transition-colors hover:bg-gray-50;
+  }
+  
+  .wishlist-remove-btn {
+    @apply px-3 py-1 text-xs border border-book-primary text-book-primary rounded hover:bg-book-primary hover:text-white transition-colors;
   }
 }
