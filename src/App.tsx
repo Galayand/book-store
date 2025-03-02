@@ -12,6 +12,8 @@ import BookDetails from "./pages/BookDetails";
 import Checkout from "./pages/Checkout";
 import AboutUs from "./pages/AboutUs";
 import Authors from "./pages/Authors";
+import Categories from "./pages/Categories";
+import NewReleases from "./pages/NewReleases";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +31,8 @@ const App = () => (
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/authors" element={<Authors />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/new-releases" element={<NewReleases />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
