@@ -33,7 +33,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📬 Contact
 
-For any inquiries, reach out to [your.email@example.com](mailto:your.email@example.com).
+For any inquiries, reach out to [your.email@example.com](mailto:agalauand@gmail.com).
 
 
 This project is built with .
