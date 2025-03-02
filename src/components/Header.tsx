@@ -1,11 +1,26 @@
 
 import React, { useState } from 'react';
-import { Search, User, Menu, X, Heart } from 'lucide-react';
+import { Search, User, Menu, X, Heart, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+    });
+    navigate('/');
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white/80 backdrop-blur-md">
@@ -59,15 +74,33 @@ const Header = () => {
             <Heart size={16} />
             <span>Wishlist</span>
           </Link>
-          <div className="flex items-center gap-2">
-            <Link to="/login" className="text-sm text-muted-foreground hover:text-book-primary">
-              Login
-            </Link>
-            <span className="text-border">|</span>
-            <Link to="/register" className="text-sm text-muted-foreground hover:text-book-primary">
-              Register
-            </Link>
-          </div>
+          
+          {isAuthenticated ? (
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-book-primary font-medium">
+                Hi, {user?.name}
+              </span>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleLogout}
+                className="flex items-center gap-1 text-muted-foreground hover:text-book-primary"
+              >
+                <LogOut size={16} />
+                <span>Logout</span>
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link to="/login" className="text-sm text-muted-foreground hover:text-book-primary">
+                Login
+              </Link>
+              <span className="text-border">|</span>
+              <Link to="/register" className="text-sm text-muted-foreground hover:text-book-primary">
+                Register
+              </Link>
+            </div>
+          )}
         </nav>
 
         <button
@@ -108,10 +141,27 @@ const Header = () => {
             <Heart size={16} />
             <span>Wishlist</span>
           </Link>
-          <div className="mt-2 flex items-center justify-between border-t border-border pt-2">
-            <Link to="/login" className="text-sm text-book-primary">Login</Link>
-            <Link to="/register" className="text-sm text-book-primary">Register</Link>
-          </div>
+          
+          {isAuthenticated ? (
+            <>
+              <div className="mt-2 flex items-center gap-2 p-2">
+                <User size={16} className="text-book-primary" />
+                <span className="font-medium">{user?.name}</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="w-full rounded-md p-2 text-left hover:bg-muted flex items-center gap-2 text-book-primary"
+              >
+                <LogOut size={16} />
+                <span>Logout</span>
+              </button>
+            </>
+          ) : (
+            <div className="mt-2 flex items-center justify-between border-t border-border pt-2">
+              <Link to="/login" className="text-sm text-book-primary">Login</Link>
+              <Link to="/register" className="text-sm text-book-primary">Register</Link>
+            </div>
+          )}
         </nav>
       </div>
     </header>
